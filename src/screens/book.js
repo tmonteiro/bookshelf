@@ -12,7 +12,7 @@ import {formatDate} from 'utils/misc'
 import {useListItem, useUpdateListItem} from 'utils/list-items'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
-import {Spinner, Textarea, ErrorMessage} from 'components/lib'
+import {Spinner, Textarea} from 'components/lib'
 import {Rating} from 'components/rating'
 import {StatusButtons} from 'components/status-buttons'
 
@@ -65,7 +65,7 @@ function BookScreen() {
               {book.loadingBook ? null : <StatusButtons book={book} />}
             </div>
           </div>
-          <div css={{marginTop: 10, minHeight: 46}}>
+          <div css={{marginTop: 10, height: 46}}>
             {listItem?.finishDate ? <Rating listItem={listItem} /> : null}
             {listItem ? <ListItemTimeframe listItem={listItem} /> : null}
           </div>
@@ -99,7 +99,7 @@ function ListItemTimeframe({listItem}) {
 }
 
 function NotesTextarea({listItem}) {
-  const [mutate, {status, error}] = useUpdateListItem({throwOnError: false})
+  const [mutate, {error, status}] = useUpdateListItem({throwOnError: false})
   const debouncedMutate = React.useCallback(debounceFn(mutate, {wait: 300}), [])
 
   function handleNotesChange(e) {
@@ -122,11 +122,19 @@ function NotesTextarea({listItem}) {
           Notes
         </label>
         {error ? (
-          <ErrorMessage
-            variant="inline"
-            error={error}
-            css={{fontSize: '0.7em'}}
-          />
+          <span role="alert" css={{color: colors.danger, fontSize: '0.7em'}}>
+            <span>There was an error:</span>{' '}
+            <pre
+              css={{
+                display: 'inline-block',
+                overflow: 'scroll',
+                margin: '0',
+                marginBottom: -5,
+              }}
+            >
+              {error.message}
+            </pre>
+          </span>
         ) : null}
         {status === 'loading' ? <Spinner /> : null}
       </div>

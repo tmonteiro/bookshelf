@@ -22,14 +22,10 @@ import {useAsync} from 'utils/use-async'
 import {CircleButton, Spinner} from './lib'
 
 function TooltipButton({label, highlight, onClick, icon, ...rest}) {
-  const {isLoading, isError, error, run, reset} = useAsync()
+  const {isLoading, isError, error, run} = useAsync()
 
   function handleClick() {
-    if (isError) {
-      reset()
-    } else {
-      run(onClick())
-    }
+    run(onClick())
   }
 
   return (
@@ -59,9 +55,9 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
 function StatusButtons({book}) {
   const listItem = useListItem(book.id)
 
-  const [mutate] = useUpdateListItem()
-  const [handleRemoveClick] = useRemoveListItem()
-  const [handleAddClick] = useCreateListItem()
+  const [update] = useUpdateListItem()
+  const [remove] = useRemoveListItem()
+  const [create] = useCreateListItem()
 
   return (
     <React.Fragment>
@@ -70,14 +66,14 @@ function StatusButtons({book}) {
           <TooltipButton
             label="Unmark as read"
             highlight={colors.yellow}
-            onClick={() => mutate({id: listItem.id, finishDate: null})}
+            onClick={() => update({id: listItem.id, finishDate: null})}
             icon={<FaBook />}
           />
         ) : (
           <TooltipButton
             label="Mark as read"
             highlight={colors.green}
-            onClick={() => mutate({id: listItem.id, finishDate: Date.now()})}
+            onClick={() => update({id: listItem.id, finishDate: Date.now()})}
             icon={<FaCheckCircle />}
           />
         )
@@ -86,14 +82,14 @@ function StatusButtons({book}) {
         <TooltipButton
           label="Remove from list"
           highlight={colors.danger}
-          onClick={() => handleRemoveClick({id: listItem.id})}
+          onClick={() => remove({id: listItem.id})}
           icon={<FaMinusCircle />}
         />
       ) : (
         <TooltipButton
           label="Add to list"
           highlight={colors.indigo}
-          onClick={() => handleAddClick({bookId: book.id})}
+          onClick={() => create({bookId: book.id})}
           icon={<FaPlusCircle />}
         />
       )}

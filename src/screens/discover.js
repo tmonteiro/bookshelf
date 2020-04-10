@@ -5,7 +5,7 @@ import {jsx} from '@emotion/core'
 import React from 'react'
 import Tooltip from '@reach/tooltip'
 import {FaSearch, FaTimes} from 'react-icons/fa'
-import {useBookSearch, refetchBookSearchQuery} from 'utils/books'
+import {useBookSearch} from 'utils/books'
 import {BookRow} from 'components/book-row'
 import {BookListUL, Spinner, Input} from 'components/lib'
 
@@ -13,10 +13,6 @@ function DiscoverBooksScreen() {
   const [query, setQuery] = React.useState('')
   const [hasSearched, setHasSearched] = React.useState()
   const {books, error, isLoading, isError, isSuccess} = useBookSearch(query)
-
-  React.useEffect(() => {
-    return () => refetchBookSearchQuery()
-  }, [])
 
   function handleSearchClick(event) {
     event.preventDefault()
